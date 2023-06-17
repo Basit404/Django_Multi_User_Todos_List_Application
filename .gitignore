@@ -1,0 +1,4 @@
+env/
+/todo/__pycache__/
+/home/__pycache__/
+db.sqlite3

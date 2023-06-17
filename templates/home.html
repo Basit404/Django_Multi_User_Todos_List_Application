@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block body %}
+
+<!-- template for adding new task -->
+<div>
+    <div class="container pt-4">
+        <div class="row p-0 mt-4">
+            <div class="col-lg-4 shadow mx-auto p-0">
+                <div class="alert alert-info">
+                    <h2>Add New TODO</h2>
+                </div>
+                <div class="p-4">
+                    <form action="/add-todo/" method="POST">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <hr>
+                        <input class="btn btn-info" type="submit" value="ADD">
+                    </form>
+                </div>
+            </div>
+
+            <!-- using conditional of Django Template Language for showing "No Todos" text in the condition of empty table of todos -->
+            <div class="col">
+                <div class="border shadow">
+
+                    {% if todos|length == 0 %}
+                    <div class="p-4">
+                        <br>
+                        <br>
+                        <div class="alert alert-info text-center">
+                            <p class="" style="font-size: 30px;">No Todos</p>
+                        </div>
+                        <br>
+                        <br>
+                    </div>
+                    {% else %}
+
+                    <!-- table for showing data to the user -->
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for todo in todos %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{todo.title}}</td>
+                                    <td>
+                                        <!-- checking status for showing the accurate emoji -->
+                                        {% if todo.status == "C" %}
+                                        ✅
+                                        {% else %}
+                                        🕒
+                                        {% endif %}
+                                    </td>
+                                    <td>{{todo.priority}}</td>
+                                    <td>
+                                        <a href="/delete-todo/{{todo.id}}" title="Delete">🗑️
+                                        </a>
+
+                                        <!-- conditional for changing "Pending" and "Completed" status -->
+                                        {% if todo.status == "P" %}
+                                        <a href="/change-status/{{todo.id}}/C" title="Mark Completed">✅
+                                        </a>
+                                        {% else %}
+                                        <a href="/change-status/{{todo.id}}/P" title="Mark Pending">🕒
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
